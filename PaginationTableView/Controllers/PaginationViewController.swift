@@ -6,7 +6,10 @@
 //
 
 import UIKit
-
+protocol PaginationProtocol:AnyObject{
+    func loadData()
+    func setupCell(tableView: UITableView, indexPath: IndexPath)
+}
 class PaginationViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
     var numbers=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,19,20]
     var sum:Int!=0
@@ -15,26 +18,14 @@ class PaginationViewController: UIViewController,UITableViewDelegate,UITableView
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
-        if indexPath.row < numbers.count {
-            cell?.backgroundColor = .link
-            cell?.textLabel?.textColor = .white
-            cell?.textLabel?.text = String(numbers[indexPath.row])
-        }
-        return cell!
+        return setupCell(tableView: tableView, indexPath: indexPath)
     }
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row ==  numbers.count - 1 {
             loadData()
         }
     }
-    func loadData(){
-        for _ in 0..<20{
-            sum = numbers[numbers.count-1] + 1
-            numbers.append(sum)
-        }
-        mainTableView.reloadData()
-    }
+    
     @IBOutlet var mainTableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,5 +50,24 @@ extension PaginationViewController{
         mainTableView.delegate = self
         mainTableView.dataSource = self
         self.title = "Pagination TableView"
+    }
+    func loadData(){
+        for _ in 0..<20{
+            sum = numbers[numbers.count-1] + 1
+            numbers.append(sum)
+        }
+        mainTableView.reloadData()
+    }
+
+}
+extension PaginationViewController{
+    func setupCell(tableView: UITableView, indexPath: IndexPath)->UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
+        if indexPath.row < numbers.count {
+            cell?.backgroundColor = .link
+            cell?.textLabel?.textColor = .white
+            cell?.textLabel?.text = String(numbers[indexPath.row])
+        }
+        return cell!
     }
 }
